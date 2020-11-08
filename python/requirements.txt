@@ -1,0 +1,13 @@
+Adafruit-Blinka==5.4.0
+adafruit-circuitpython-neopixel==6.0.0
+adafruit-circuitpython-pypixelbuf==2.1.2
+Adafruit-PlatformDetect==2.17.0
+Adafruit-PureIO==1.1.5
+pyftdi==0.51.2
+pyserial==3.4
+pyusb==1.1.0
+rpi-ws281x==4.2.4
+RPi.GPIO==0.7.0
+sysv-ipc==1.0.1
+-e git://github.com/drakeapps/cloud-leds#egg=cloud-leds
+-e git://github.com/drakeapps/audio-reactive-led-strip@class#egg=audio-reactive-led-strip
