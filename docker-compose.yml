@@ -4,7 +4,7 @@ services:
   server:
     build:
       context: .
-    # devices:
-    #   - /dev/snd:/dev/snd
-    # privileged: true
+    devices:
+      - /dev/snd:/dev/snd
+    privileged: true
     

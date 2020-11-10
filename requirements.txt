@@ -11,8 +11,11 @@ RPi.GPIO==0.7.0
 sysv-ipc==1.0.1
 -e git://github.com/drakeapps/cloud-leds#egg=CloudLights
 -e git://github.com/drakeapps/audio-reactive-led-strip@class#egg=AudioReactiveLEDStrip
-# install libatlas-base-dev via apt-get
-numpy==1.19.4
-# install portaudio19-dev via apt-get
-PyAudio==0.2.11
-scipy==1.5.4
+######
+# These are all installed via apt-get 
+######
+## install libatlas-base-dev via apt-get
+#numpy==1.19.4
+## install portaudio19-dev via apt-get
+#PyAudio==0.2.11
+#scipy==1.5.4
