@@ -23,4 +23,6 @@ RUN pip3 install -r requirements.txt
 
 COPY main.py /code/main.py
 
-CMD python3 main.py
+ENV N_PIXELS=""
+
+CMD python3 main.py --n_pixels "${N_PIXELS}"
