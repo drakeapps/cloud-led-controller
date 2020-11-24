@@ -43,7 +43,7 @@ if __name__ == "__main__":
     parser.add_argument('--n_rolling_history', type=valid_argument, dest='n_rolling_history')
 
 
-    args = parser.parse_args()
+    args = vars(parser.parse_args())
 
     print(args)
 

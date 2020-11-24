@@ -2,10 +2,11 @@ version: '3'
 
 services:
   server:
-    image: ghcr.io/drakeapps/cloud-led-controller/server-rpi2
+    image: ghcr.io/drakeapps/cloud-led-controller/server-rpi
     build:
       context: .
     devices:
       - /dev/snd:/dev/snd
     privileged: true
+    env_file: .env
     
