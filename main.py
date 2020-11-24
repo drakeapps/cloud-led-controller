@@ -7,10 +7,24 @@ from AudioReactiveLEDStrip import led
 from AudioReactiveLEDStrip import microphone
 
 
-def valid_argument(val):
-    print(val)
+def valid_int(val):
+    return valid_argument(val, typ=int)
+
+def valid_boolean(val):
+    return valid_argument(val, typ=bool)
+
+def valid_float(val):
+    return valid_argument(val, typ=float)
+
+def valid_argument(val, typ=None):
     if val:
-        return val
+        if typ:
+            try:
+                return typ(val)
+            except:
+                return None
+        else:
+            return val
     else:
         return None
 
@@ -25,22 +39,22 @@ def build_arguments(klass, ags):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Audio Reactive LED Tester')
     
-    parser.add_argument('--n_pixels', type=valid_argument, dest='n_pixels')
+    parser.add_argument('--n_pixels', type=valid_int, dest='n_pixels')
     parser.add_argument('--effect', type=valid_argument, dest='effect')
-    parser.add_argument('--n_fft_bins', type=valid_argument, dest='n_fft_bins')
-    parser.add_argument('--fps', type=valid_argument, dest='fps')
-    parser.add_argument('--min_volume_threshold', type=valid_argument, dest='min_volume_threshold')
-    parser.add_argument('--display_fps', type=valid_argument, dest='display_fps')
-    parser.add_argument('--led_pin', type=valid_argument, dest='led_pin')
-    parser.add_argument('--led_freq_hz', type=valid_argument, dest='led_freq_hz')
-    parser.add_argument('--led_dma', type=valid_argument, dest='led_dma')
-    parser.add_argument('--brightness', type=valid_argument, dest='brightness')
-    parser.add_argument('--led_invert', type=valid_argument, dest='led_invert')
-    parser.add_argument('--software_gamma_correction', type=valid_argument, dest='software_gamma_correction')
-    parser.add_argument('--mic_rate', type=valid_argument, dest='mic_rate')
-    parser.add_argument('--min_frequency', type=valid_argument, dest='min_frequency')
-    parser.add_argument('--max_frequency', type=valid_argument, dest='max_frequency')
-    parser.add_argument('--n_rolling_history', type=valid_argument, dest='n_rolling_history')
+    parser.add_argument('--n_fft_bins', type=valid_int, dest='n_fft_bins')
+    parser.add_argument('--fps', type=valid_int, dest='fps')
+    parser.add_argument('--min_volume_threshold', type=valid_float, dest='min_volume_threshold')
+    parser.add_argument('--display_fps', type=valid_bool, dest='display_fps')
+    parser.add_argument('--led_pin', type=valid_int, dest='led_pin')
+    parser.add_argument('--led_freq_hz', type=valid_int, dest='led_freq_hz')
+    parser.add_argument('--led_dma', type=valid_int, dest='led_dma')
+    parser.add_argument('--brightness', type=valid_int, dest='brightness')
+    parser.add_argument('--led_invert', type=valid_bool, dest='led_invert')
+    parser.add_argument('--software_gamma_correction', type=valid_bool, dest='software_gamma_correction')
+    parser.add_argument('--mic_rate', type=valid_int, dest='mic_rate')
+    parser.add_argument('--min_frequency', type=valid_int, dest='min_frequency')
+    parser.add_argument('--max_frequency', type=valid_int, dest='max_frequency')
+    parser.add_argument('--n_rolling_history', type=valid_int, dest='n_rolling_history')
 
 
     args = vars(parser.parse_args())
