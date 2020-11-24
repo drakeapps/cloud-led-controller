@@ -2,6 +2,7 @@ version: '3'
 
 services:
   server:
+    image: ghcr.io/drakeapps/cloud-led-controller/server-rpi2
     build:
       context: .
     devices:
