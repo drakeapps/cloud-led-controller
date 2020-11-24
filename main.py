@@ -10,7 +10,7 @@ from AudioReactiveLEDStrip import microphone
 def valid_int(val):
     return valid_argument(val, typ=int)
 
-def valid_boolean(val):
+def valid_bool(val):
     return valid_argument(val, typ=bool)
 
 def valid_float(val):
