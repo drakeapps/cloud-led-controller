@@ -41,6 +41,9 @@ ENV MIN_FREQUENCY=""
 ENV MAX_FREQUENCY=""
 ENV N_ROLLING_HISTORY=""
 
+ENV SERVER_HOST=""
+ENV SERVER_PORT=""
+
 
 CMD python3 main.py \
 	--n_pixels "${N_PIXELS}" \

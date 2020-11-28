@@ -1,10 +1,21 @@
 
 import argparse
 import inspect
+import asyncio
+import websockets
 
 from AudioReactiveLEDStrip import visualization
 from AudioReactiveLEDStrip import led
 from AudioReactiveLEDStrip import microphone
+
+from CloudLights import lights
+
+
+STATE = {
+    'mode': 'off'
+}
+
+CONNS = set()
 
 
 def valid_int(val):
@@ -35,6 +46,13 @@ def build_arguments(klass, ags):
         if arg in ags and ags[arg]:
             kv[arg] = ags[arg]
     return kv
+
+
+
+
+
+
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Audio Reactive LED Tester')

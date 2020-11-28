@@ -9,6 +9,7 @@ pyusb==1.1.0
 rpi-ws281x==4.2.4
 RPi.GPIO==0.7.0
 sysv-ipc==1.0.1
+websockets==8.1
 -e git://github.com/drakeapps/cloud-leds#egg=CloudLights
 -e git://github.com/drakeapps/audio-reactive-led-strip#egg=AudioReactiveLEDStrip
 ######
