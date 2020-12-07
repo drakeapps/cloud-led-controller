@@ -1,0 +1,20 @@
+
+// TODO: use m-ui make styles instead of this
+// this got it into the css processor easier
+.header {
+	div {
+		display: flex;
+		justify-content: space-between;
+		.title {
+			color: white;
+			text-decoration: none;
+		}
+	}
+}
+
+
+.status-line {
+	text-align: right;
+	font-size: 85%;
+	
+}
