@@ -35,6 +35,7 @@ ENV LED_PIN=""
 ENV LED_FREQ_HZ=""
 ENV LED_DMA=""
 ENV BRIGHTNESS=""
+ENV SELF_BRIGHTNESS=""
 ENV LED_INVERT=""
 ENV SOFTWARE_GAMMA_CORRECTION=""
 ENV MIC_RATE=""
@@ -57,10 +58,13 @@ CMD python3 main.py \
 	--led_freq_hz "${LED_FREQ_HZ}" \
 	--led_dma "${LED_DMA}" \
 	--brightness "${BRIGHTNESS}" \
+	--self_brightness "${SELF_BRIGHTNESS}" \
 	--led_invert "${LED_INVERT}" \
 	--software_gamma_correction "${SOFTWARE_GAMMA_CORRECTION}" \
 	--mic_rate "${MIC_RATE}" \
 	--min_frequency "${MIN_FREQUENCY}" \
 	--max_frequency "${MAX_FREQUENCY}" \
-	--n_rolling_history "${N_ROLLING_HISTORY}"
+	--n_rolling_history "${N_ROLLING_HISTORY}" \
+	--host "${SERVER_HOST}" \
+	--port "${SERVER_PORT}"
 
