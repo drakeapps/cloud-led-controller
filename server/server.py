@@ -33,6 +33,8 @@ class Server:
         self.cloud_lights = cloud_lights
         self.mic_kv = mic_kv
 
+        self.mic = microphone.Microphone()
+
         self.CONNS = set()
 
         print(f"Starting websocket server on {host}:{port}")
@@ -68,10 +70,10 @@ class Server:
         })
     
     def start_mic_streaming(self):
-        microphone.start_stream(self.audio_lights.microphone_update, **self.mic_kv)
+        self.mic.start_stream(self.audio_lights.microphone_update, **self.mic_kv)
     
     def stop_mic_streaming(self):
-        microphone.stop_stream()
+        self.mic.stop_stream()
 
     async def start_sound(self):
         print('starting sound')
