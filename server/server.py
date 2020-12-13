@@ -111,6 +111,9 @@ class Server:
     def stop_color(self):
         self.cloud_lights.off()
     
+    def set_cloud_color(self, color):
+        self.cloud_lights.transition(color=color, length=0.05, interval=0.01)
+    
     async def turn_on(self):
         print("turning on")
         state = self.state
@@ -149,10 +152,19 @@ class Server:
         else:
             return
         
+        loop = asyncio.get_event_loop()
+        tasks = []
+        task = loop.run_in_executor(None, self.set_cloud_color, rgb)
+        tasks.append(task)
+        await asyncio.gather(*tasks)
         
+        # state["color"] = {
+        #     'rgb': rgb,
+        #     'hsv': hsv
+        # }
         state["color"] = {
-            'rgb': rgb,
-            'hsv': hsv
+            'rgb': self.cloud_lights.get_rgb(),
+            'hsv': self.cloud_lights.get_hsv()
         }
 
         await self.set_state(state)
