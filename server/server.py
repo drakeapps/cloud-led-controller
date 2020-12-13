@@ -108,14 +108,14 @@ class Server:
     
 
     def start_color(self):
-        self.cloud_lights.transition(color=self.state['color']['rgb'], length=2, interval=0.4)
+        self.cloud_lights.transition(color=self.state['color']['rgb'], length=0.2, interval=0.2)
     
     def stop_color(self):
         self.cloud_lights.off()
     
     def set_cloud_color(self, color):
         print(f"transitioning to {color}")
-        self.cloud_lights.transition(color=color, length=2, interval=0.4)
+        self.cloud_lights.transition(color=color, length=0.2, interval=0.2)
     
     async def turn_on(self):
         print("turning on")
