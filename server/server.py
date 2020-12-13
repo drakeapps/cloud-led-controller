@@ -7,7 +7,7 @@ from AudioReactiveLEDStrip import visualization
 from AudioReactiveLEDStrip import led
 from AudioReactiveLEDStrip import microphone
 
-from CloudLights import CloudLights
+from CloudLights import lights
 
 
 # TODO remove
