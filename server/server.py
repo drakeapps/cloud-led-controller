@@ -1,5 +1,6 @@
 import asyncio
 import json
+import threading
 import websockets
 
 
@@ -34,6 +35,8 @@ class Server:
         self.mic_kv = mic_kv
 
         self.mic = microphone.Microphone()
+
+        self.sound_loop = None
 
         self.CONNS = set()
 
@@ -77,19 +80,32 @@ class Server:
 
     async def start_sound(self):
         print('starting sound')
-        loop = asyncio.get_event_loop()
-        tasks = []
-        task = loop.run_in_executor(None, self.start_mic_streaming)
-        tasks.append(task)
-        return await asyncio.gather(*tasks)
+        if not self.sound_loop:
+            print('starting sound loop')
+            self.sound_loop.loop = asyncio.new_event_loop()
+            threading.Thread(target=self.sound_loop.loop.run_forever).start()
+            future = asyncio.run_coroutine_threadsafe(self.start_mic_streaming(), self.sound_loop)
+        else:
+            print('sound loop already exists')
+        # loop = asyncio.get_event_loop()
+        # tasks = []
+        # task = loop.run_in_executor(None, self.start_mic_streaming)
+        # tasks.append(task)
+        # return await asyncio.gather(*tasks)
+        return
     
     async def stop_sound(self):
         print('stopping sound')
-        loop = asyncio.get_event_loop()
-        tasks = []
-        task = loop.run_in_executor(None, self.stop_mic_streaming)
-        tasks.append(task)
-        return await asyncio.gather(*tasks)
+        # loop = asyncio.get_event_loop()
+        # tasks = []
+        # task = loop.run_in_executor(None, self.stop_mic_streaming)
+        # tasks.append(task)
+        # return await asyncio.gather(*tasks)
+        if self.sound_loop:
+            print('found loop, closing')
+            self.sound_loop.close()
+        else:
+            print('no sound loop')
 
 
     async def toggle_sound(self, action):
@@ -97,7 +113,7 @@ class Server:
         if action == "on" or True:
             # await self.start_sound()
             # this needs to just run in the background
-            asyncio.create_task(self.start_sound())
+            await self.start_sound()
             state["status"] = "sound"
         else:
             # this is just setting a variable to false
