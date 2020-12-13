@@ -79,7 +79,7 @@ if __name__ == "__main__":
     parser.add_argument('--port', type=valid_int, dest='port')
     parser.add_argument('--host', type=valid_argument, dest='host')
 
-    parser.add_argument('--self_brightness', type=valid_int, dest='self_brightness')
+    parser.add_argument('--self_brightness', type=valid_float, dest='self_brightness')
 
 
     args = vars(parser.parse_args())
