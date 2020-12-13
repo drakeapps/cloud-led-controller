@@ -2,13 +2,21 @@ import asyncio
 import json
 import websockets
 
+
+from AudioReactiveLEDStrip import visualization
+from AudioReactiveLEDStrip import led
+from AudioReactiveLEDStrip import microphone
+
+from CloudLights import CloudLights
+
+
 # TODO remove
 # i think we can drop this and just rely on the cloudlights module for giving us color
 # but for testing purposes, we're going to use it to convert to hsv
 import colorsys
 
 class Server:
-    def __init__(self, host="localhost", port=6789):
+    def __init__(self, host="localhost", port=6789, cloud_lights=None, audio_lights=None, mic_kv=None):
         # this will maintain a status of off/on/sound
         # for homebridge, sound and normal light will be separate lights
         # homekit
@@ -20,6 +28,10 @@ class Server:
                 'hsv': [0,0,0]
             }
         }
+
+        self.audio_lights = audio_lights
+        self.cloud_lights = cloud_lights
+        self.mic_kv = mic_kv
 
         self.CONNS = set()
 
@@ -54,12 +66,35 @@ class Server:
                 'power': (self.state['status'] == "sound")
             }
         })
+    
+    def start_mic_streaming(self):
+        microphone.start_stream(self.audio_lights.microphone_update, **self.mic_kv)
+    
+    def stop_mic_streaming(self):
+        microphone.stop_stream()
+
+    async def start_sound(self):
+        loop = asyncio.get_event_loop()
+        tasks = []
+        task = loop.run_in_executor(None, self.start_mic_streaming)
+        tasks.append(task)
+        return await asyncio.gather(*tasks)
+    
+    async def stop_sound(self):
+        loop = asyncio.get_event_loop()
+        tasks = []
+        task = loop.run_in_executor(None, self.stop_mic_streaming)
+        tasks.append(task)
+        return await asyncio.gather(*tasks)
+
 
     async def toggle_sound(self, action):
         state = self.state
         if action == "on" or True:
+            await self.start_sound()
             state["status"] = "sound"
         else:
+            await self.stop_sound()
             state["status"] = "off"
         await self.set_state(state)
     
@@ -113,7 +148,6 @@ class Server:
     async def change_status(self, websocket, path):
         await self.register(websocket)
         try:
-            # im not sure if we need this
             await websocket.send(self.status_json())
             async for message in websocket:
                 data = json.loads(message)

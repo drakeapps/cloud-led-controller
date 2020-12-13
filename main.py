@@ -8,7 +8,9 @@ from AudioReactiveLEDStrip import visualization
 from AudioReactiveLEDStrip import led
 from AudioReactiveLEDStrip import microphone
 
-from CloudLights import lights
+from CloudLights import CloudLights
+
+from server import server
 
 
 STATE = {
@@ -74,6 +76,11 @@ if __name__ == "__main__":
     parser.add_argument('--max_frequency', type=valid_int, dest='max_frequency')
     parser.add_argument('--n_rolling_history', type=valid_int, dest='n_rolling_history')
 
+    parser.add_argument('--port', type=valid_int, dest='port')
+    parser.add_argument('--host', type=valid_argument, dest='host')
+
+    parser.add_argument('--self_brightness', type=valid_int, dest='self_brightness')
+
 
     args = vars(parser.parse_args())
 
@@ -85,9 +92,16 @@ if __name__ == "__main__":
 
     mic_kv = build_arguments(microphone.start_stream, args)
 
+    cloud_kv = build_arguments(CloudLights, args)
+
+    server_kv = build_arguments(server.Server, args)
+
     leds = led.LED(**led_kv)
     leds.update()
 
     audio = visualization.AudioLEDVisualization(leds, **reactive_kv)
+    # microphone.start_stream(audio.microphone_update, **mic_kv)
 
-    microphone.start_stream(audio.microphone_update, **mic_kv)
+    cloud_lights = CloudLights.CloudLights(**cloud_kv)
+
+    s = server.Server(cloud_lights=cloud_lights, audio_lights=audio, mic_kv=mic_kv, **server_kv)

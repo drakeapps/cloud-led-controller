@@ -213,7 +213,11 @@ const ColorSelector = props => {
 		return <></>;
 	}
 
-	return <ChromePicker color={rgbToHex(...props.color.rgb)} onChangeComplete={props.handleOnChangeComplete} ></ChromePicker>;
+	return (<Grid container justify="center" style={{paddingTop: '10px'}}>
+		<Grid item>
+			<ChromePicker color={rgbToHex(...props.color.rgb)} onChangeComplete={props.handleOnChangeComplete} ></ChromePicker>
+		</Grid>
+	</Grid>);
 
 }
 
