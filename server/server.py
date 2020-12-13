@@ -95,7 +95,7 @@ class Server:
         if action == "on" or True:
             # await self.start_sound()
             # this needs to just run in the background
-            asyncio.create_task(self.start_sound)
+            asyncio.create_task(self.start_sound())
             state["status"] = "sound"
         else:
             # this is just setting a variable to false
