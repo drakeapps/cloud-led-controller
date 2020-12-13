@@ -99,8 +99,7 @@ if __name__ == "__main__":
     leds = led.LED(**led_kv)
     leds.update()
 
-    # audio = visualization.AudioLEDVisualization(leds, **reactive_kv)
-    audio = None
+    audio = visualization.AudioLEDVisualization(leds, **reactive_kv)
     # microphone.start_stream(audio.microphone_update, **mic_kv)
 
     cloud_lights = lights.CloudLights(**cloud_kv)
