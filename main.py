@@ -92,7 +92,7 @@ if __name__ == "__main__":
 
     mic_kv = build_arguments(microphone.start_stream, args)
 
-    cloud_kv = build_arguments(CloudLights, args)
+    cloud_kv = build_arguments(lights.CloudLights, args)
 
     server_kv = build_arguments(server.Server, args)
 
@@ -102,6 +102,6 @@ if __name__ == "__main__":
     audio = visualization.AudioLEDVisualization(leds, **reactive_kv)
     # microphone.start_stream(audio.microphone_update, **mic_kv)
 
-    cloud_lights = CloudLights.CloudLights(**cloud_kv)
+    cloud_lights = lights.CloudLights(**cloud_kv)
 
     s = server.Server(cloud_lights=cloud_lights, audio_lights=audio, mic_kv=mic_kv, **server_kv)

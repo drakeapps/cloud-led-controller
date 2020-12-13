@@ -20,6 +20,7 @@ RUN pip3 install -r requirements.txt
 # # separate from requirements to not rebuild on code changes
 # COPY . /code/
 
+COPY server /code/server
 
 COPY main.py /code/main.py
 
