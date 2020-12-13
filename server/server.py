@@ -24,7 +24,7 @@ class Server:
             'status': 'off',
             'brightness': 0,
             'color': {
-                'rgb': [0,0,0],
+                'rgb': [10,10,10],
                 'hsv': [0,0,0]
             }
         }
@@ -74,6 +74,7 @@ class Server:
         microphone.stop_stream()
 
     async def start_sound(self):
+        print('starting sound')
         loop = asyncio.get_event_loop()
         tasks = []
         task = loop.run_in_executor(None, self.start_mic_streaming)
@@ -81,6 +82,7 @@ class Server:
         return await asyncio.gather(*tasks)
     
     async def stop_sound(self):
+        print('stopping sound')
         loop = asyncio.get_event_loop()
         tasks = []
         task = loop.run_in_executor(None, self.stop_mic_streaming)
@@ -91,23 +93,47 @@ class Server:
     async def toggle_sound(self, action):
         state = self.state
         if action == "on" or True:
-            await self.start_sound()
+            # await self.start_sound()
+            # this needs to just run in the background
+            asyncio.create_task(self.start_sound)
             state["status"] = "sound"
         else:
+            # this is just setting a variable to false
             await self.stop_sound()
+            # asyncio.create_task(self.stop_sound)
             state["status"] = "off"
         await self.set_state(state)
     
+
+    def start_color(self):
+        self.cloud_lights.transition(color=self.state['color']['rgb'], length=0.05, interval=0.01)
+    
+    def stop_color(self):
+        self.cloud_lights.off()
+    
     async def turn_on(self):
+        print("turning on")
         state = self.state
-        print("on")
+        if state["status"] == "sound":
+            print("stopping sound")
+            await self.stop_sound()
+        loop = asyncio.get_event_loop()
+        tasks = []
+        task = loop.run_in_executor(None, self.start_color)
+        tasks.append(task)
+        await asyncio.gather(*tasks)
         state["status"] = "on"
         print(self.state)
         await self.set_state(state)
 
     async def turn_off(self):
+        print("turning off")
         state = self.state
-        print("off")
+        loop = asyncio.get_event_loop()
+        tasks = []
+        task = loop.run_in_executor(None, self.stop_color)
+        tasks.append(task)
+        await asyncio.gather(*tasks)
         state["status"] = "off"
         print(self.state)
         await self.set_state(state)
