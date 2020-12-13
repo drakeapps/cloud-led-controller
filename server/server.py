@@ -83,7 +83,7 @@ class Server:
         if not self.sound_loop:
             print('starting sound loop')
             self.sound_loop = asyncio.new_event_loop()
-            threading.Thread(target=self.sound_loop.loop.run_forever).start()
+            threading.Thread(target=self.sound_loop.run_forever).start()
             future = asyncio.run_coroutine_threadsafe(self.start_mic_streaming(), self.sound_loop)
         else:
             print('sound loop already exists')
