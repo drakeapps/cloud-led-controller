@@ -9,4 +9,6 @@ services:
       - /dev/snd:/dev/snd
     privileged: true
     env_file: .env
+    ports:
+      6789:6789
     
