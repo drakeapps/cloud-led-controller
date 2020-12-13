@@ -90,7 +90,7 @@ if __name__ == "__main__":
 
     reactive_kv = build_arguments(visualization.AudioLEDVisualization, args)
 
-    mic_kv = build_arguments(microphone.start_stream, args)
+    mic_kv = build_arguments(microphone.Microphone.start_stream, args)
 
     cloud_kv = build_arguments(lights.CloudLights, args)
 
