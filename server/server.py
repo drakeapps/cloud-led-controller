@@ -84,7 +84,7 @@ class Server:
             print('starting sound loop')
             self.sound_loop = asyncio.new_event_loop()
             threading.Thread(target=self.sound_loop.run_forever).start()
-            future = asyncio.run_coroutine_threadsafe(self.start_mic_streaming(), self.sound_loop)
+            asyncio.run_coroutine_threadsafe(self.start_mic_streaming(), self.sound_loop)
         else:
             print('sound loop already exists')
         # loop = asyncio.get_event_loop()
@@ -114,7 +114,7 @@ class Server:
         if action == "on" or True:
             # await self.start_sound()
             # this needs to just run in the background
-            await self.start_sound()
+            asyncio.create_task(self.start_sound())
             state["status"] = "sound"
         else:
             # this is just setting a variable to false
