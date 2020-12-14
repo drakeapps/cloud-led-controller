@@ -95,7 +95,7 @@ class Server:
         # else:
         #     print('sound loop already exists')
         loop = asyncio.get_event_loop()
-        self.sound_task = loop.run_in_executor(self.executor, self.start_mic_streaming)
+        loop.run_in_executor(self.executor, self.start_mic_streaming)
         # tasks.append(task)
         # return await asyncio.gather(*tasks)
         # return
@@ -109,26 +109,26 @@ class Server:
         # task = loop.run_in_executor(None, self.stop_mic_streaming)
         # tasks.append(task)
         # return await asyncio.gather(*tasks)
-        if self.sound_task:
-            print('found loop, closing')
-            loop = asyncio.get_event_loop()
-            self.sound_task = loop.run_in_executor(self.executor, self.stop_mic_streaming)
-            sound_status = self.sound_task.cancel()
-            print(f"cancel: {sound_status}")
-            if sound_status:
-                self.sound_task = None
+        # if self.sound_task:
+        print('found loop, closing')
+        loop = asyncio.get_event_loop()
+        loop.run_in_executor(self.executor, self.stop_mic_streaming)
+            # sound_status = self.sound_task.cancel()
+            # print(f"cancel: {sound_status}")
+            # if sound_status:
             # self.sound_task = None
-        else:
-            print('no sound loop')
+            # self.sound_task = None
+        # else:
+            # print('no sound loop')
 
 
     async def toggle_sound(self, action):
         state = self.state
-        if action == "on" or True:
+        if action == "on" and state["status"] != "sound":
             # await self.start_sound()
             # this needs to just run in the background
             loop = asyncio.get_event_loop()
-            self.sound_task = loop.create_task(self.start_sound())
+            loop.create_task(self.start_sound())
             state["status"] = "sound"
         else:
             # this is just setting a variable to false
