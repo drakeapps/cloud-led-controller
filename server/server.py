@@ -113,7 +113,10 @@ class Server:
             print('found loop, closing')
             loop = asyncio.get_event_loop()
             self.sound_task = loop.run_in_executor(self.executor, self.stop_mic_streaming)
-            await self.sound_task.cancel()
+            sound_status = self.sound_task.cancel()
+            print(f"cancel: {sound_status}")
+            if sound_status:
+                self.sound_task = None
             # self.sound_task = None
         else:
             print('no sound loop')
