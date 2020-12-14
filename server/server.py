@@ -166,14 +166,15 @@ class Server:
     async def turn_off(self):
         print("turning off")
         state = self.state
+        # if sound is running, we need to stop it
         if state["status"] == "sound":
             await self.stop_sound()
-        else:
-            loop = asyncio.get_event_loop()
-            tasks = []
-            task = loop.run_in_executor(None, self.stop_color)
-            tasks.append(task)
-            await asyncio.gather(*tasks)
+        # we always want to blank out the LEDs
+        loop = asyncio.get_event_loop()
+        tasks = []
+        task = loop.run_in_executor(None, self.stop_color)
+        tasks.append(task)
+        await asyncio.gather(*tasks)
         state["status"] = "off"
         print(self.state)
         await self.set_state(state)
