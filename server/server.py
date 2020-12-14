@@ -3,6 +3,9 @@ import json
 import threading
 import websockets
 
+from concurrent.futures import ThreadPoolExecutor
+
+
 
 from AudioReactiveLEDStrip import visualization
 from AudioReactiveLEDStrip import led
@@ -39,6 +42,8 @@ class Server:
         self.sound_loop = None
 
         self.sound_task = None
+
+        self.executor = ThreadPoolExecutor()
 
         self.CONNS = set()
 
@@ -89,13 +94,12 @@ class Server:
         #     asyncio.run_coroutine_threadsafe(self.start_mic_streaming(), self.sound_loop)
         # else:
         #     print('sound loop already exists')
-        # loop = asyncio.get_event_loop()
-        # tasks = []
-        # task = loop.run_in_executor(None, self.start_mic_streaming)
+        loop = asyncio.get_event_loop()
+        self.sound_task = loop.run_in_executor(self.executor, self.start_mic_streaming)
         # tasks.append(task)
         # return await asyncio.gather(*tasks)
         # return
-        self.start_mic_streaming()
+        # self.start_mic_streaming()
         return
     
     async def stop_sound(self):
