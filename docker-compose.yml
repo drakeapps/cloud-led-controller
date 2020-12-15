@@ -11,4 +11,9 @@ services:
     env_file: .env
     ports:
       - 6789:6789
-    
+  webui:
+    image: ghcr.io/drakeapps/cloud-led-controller/webui
+    build:
+      context: web-ui/
+    ports:
+      - 80:80
