@@ -9,9 +9,8 @@ import {
 	useHistory
 } from "react-router-dom";
 
-import { ChromePicker } from 'react-color';
+import { CirclePicker } from 'react-color';
 
-import FormGroup from '@material-ui/core/FormGroup';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import AppBar from '@material-ui/core/AppBar';
@@ -78,7 +77,7 @@ const App = props => {
 
 const Config = props => {
 	return (<Box>
-		<Grid container spacing={3}>
+		<Grid container spacing={3} style={{padding: "10px"}}>
 			<Grid item xs={12}><TextField id="host" label="Host" onChange={(event) => {localStorage.setItem('host', event.target.value)}} defaultValue={props.host} /></Grid>
 			<Grid item xs={12}><TextField id="port" label="Port" type="number" onChange={(event) => {localStorage.setItem('port', event.target.value)}} defaultValue={props.port}  /></Grid>
 			<Grid item xs={12}>
@@ -237,7 +236,7 @@ const ColorSelector = props => {
 
 	return (<Grid container justify="center" style={{paddingTop: '10px'}}>
 		<Grid item>
-			<ChromePicker color={rgbToHex(...props.color.rgb)} onChangeComplete={props.handleOnChangeComplete} ></ChromePicker>
+			<CirclePicker color={rgbToHex(...props.color.rgb)} onChangeComplete={props.handleOnChangeComplete} ></CirclePicker>
 		</Grid>
 	</Grid>);
 

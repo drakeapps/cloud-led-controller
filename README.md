@@ -44,7 +44,7 @@ sudo python3 server.py ;# plus whatever command line options
 
 [List of the command line options](https://github.com/drakeapps/cloud-led-controller/blob/master/main.py#L62)
 
-The important one `n_pixels` representing the length of LED strip. Most of these options are passed to the respective [audio](https://github.com/drakeapps/audio-reactive-led-strip) or [solid](https://github.com/drakeapps/cloud-leds) led classes.
+The important one is `n_pixels` representing the length of LED strip. This needs to be an even number even if you have an odd number of LEDs. Most of these options are passed to the respective [audio](https://github.com/drakeapps/audio-reactive-led-strip) or [solid](https://github.com/drakeapps/cloud-leds) led classes.
 
 If using docker, edit the `.env` file to match these options, but in uppercase as shown  in [`.env-sample`](https://github.com/drakeapps/cloud-led-controller/blob/master/.env-sample)
 
@@ -66,7 +66,7 @@ Browsers and SSL websockets are very picky. I highly recommend using a legit SSL
 
 Included is a small react web interface. This doesn't need to be run on the same device as the websocket server.
 
-Visit `ip-address/config` first to setup the websocket server location and port.
+Visit `ip-address/config` first to setup the websocket server location, port, and ssl.
 
 ### Building/Running
 
@@ -86,3 +86,8 @@ npm run build
 
 This builds the html and js files. You'll then need to serve them via your preferred web server.
 
+A simple, yet insecure, way to serve the files is with [http-server](https://github.com/http-party/http-server)
+
+```
+npx http-server dist --proxy http://localhost:8080\?
+```
