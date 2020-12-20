@@ -11,6 +11,14 @@ services:
     env_file: .env
     ports:
       - 6789:6789
+  ssl:
+    image: ghcr.io/drakeapps/cloud-led-controller/ssl-rpi
+    build:
+      context: ssl/
+    ports:
+      - 443:443
+    volumes:
+      - /var/opt/ssl/:/etc/nginx/ssl/
   webui:
     image: ghcr.io/drakeapps/cloud-led-controller/webui
     build:
