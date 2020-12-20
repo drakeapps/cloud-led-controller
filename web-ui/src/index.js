@@ -11,6 +11,7 @@ import {
 
 import { ChromePicker } from 'react-color';
 
+import FormGroup from '@material-ui/core/FormGroup';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import AppBar from '@material-ui/core/AppBar';
@@ -20,6 +21,8 @@ import TextField from '@material-ui/core/TextField';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import RefreshIcon from '@material-ui/icons/Refresh';
@@ -33,11 +36,23 @@ const rgbToHex = (r, g, b) => '#' + [r, g, b].map(x => {
 
 
 const App = props => {
-	let [host, port] = useState();
+	let [host, setHost] = useState(localStorage.getItem('host'));
+	let [port, setPort] = useState(localStorage.getItem('port'));
+	let [ssl, setSSL] = useState(localStorage.getItem('ssl') ? true : false);
+	
 	const history = useHistory();
 
-	host = localStorage.getItem('host');
-	port = localStorage.getItem('port');
+	// host = ;
+	// port = ;
+	// ssl = ;
+
+	let changeSSL = (value) => {
+		console.log(value);
+		value = value ? true: false;
+		console.log(value);
+		localStorage.setItem('ssl', value);
+		setSSL(value);
+	};
 
 	return (
 	<Router>
@@ -51,10 +66,10 @@ const App = props => {
 		</AppBar>
 		<Switch>
 		<Route path="/config">
-			<Config host={host} port={port} />
+			<Config host={host} port={port} ssl={ssl} changeSSL={changeSSL}/>
 		</Route>
 		<Route path="/">
-			<Home host={host} port={port} />
+			<Home host={host} port={port} ssl={ssl} />
 		</Route>
 		</Switch>
 	</Router>
@@ -66,6 +81,12 @@ const Config = props => {
 		<Grid container spacing={3}>
 			<Grid item xs={12}><TextField id="host" label="Host" onChange={(event) => {localStorage.setItem('host', event.target.value)}} defaultValue={props.host} /></Grid>
 			<Grid item xs={12}><TextField id="port" label="Port" type="number" onChange={(event) => {localStorage.setItem('port', event.target.value)}} defaultValue={props.port}  /></Grid>
+			<Grid item xs={12}>
+				<FormControlLabel
+					control={<Checkbox checked={props.ssl} onChange={(event) => {console.log(event); props.changeSSL(event.target.checked)}} name="ssl" />}
+					label="SSL"
+				/>
+			</Grid>
 			<Grid item xs={12}><Button component={Link} to="/">Save</Button></Grid>
 		</Grid>
 	</Box>);
@@ -87,9 +108,10 @@ const Home = props => {
 	useEffect(() => {
 		const host = localStorage.getItem('host');
 		const port = localStorage.getItem('port');
+		const protocol = (localStorage.getItem('ssl')) ? 'wss' : 'ws';
 		
 		try {			
-			ws.current = new WebSocket(`ws://${host}:${port}`);
+			ws.current = new WebSocket(`${protocol}://${host}:${port}`);
 	
 			ws.current.onopen = () => {
 				console.log('webocket connection opened');

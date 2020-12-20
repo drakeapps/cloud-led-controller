@@ -60,6 +60,8 @@ Start the docker container:
 docker-compose up -d ssl
 ```
 
+Browsers and SSL websockets are very picky. I highly recommend using a legit SSL cert (like letsenrypt) on a valid domain. I use [this gist](https://gist.github.com/drakeapps/f1272d1b9e2ace33246ae9fa712ca14f) to get a wildcard cert on my cloudflare managed DNS.
+
 ## Web UI
 
 Included is a small react web interface. This doesn't need to be run on the same device as the websocket server.
