@@ -1,7 +1,8 @@
 FROM balenalib/raspberry-pi:buster
 
 # we should probably base this on the balena python image
-# i've had issues with it, so we can do it manually
+# i had issues with it getting it to work
+# so that's why we're just doing it manually
 RUN apt-get update && apt-get install -y \
 	python3 python3-pip python3-dev python3-setuptools build-essential git python3-pyaudio python3-numpy python3-scipy
 
@@ -16,12 +17,8 @@ COPY requirements.txt /code/requirements.txt
 WORKDIR /code
 RUN pip3 install -r requirements.txt
 
-# # copy scripts
-# # separate from requirements to not rebuild on code changes
-# COPY . /code/
-
+# copy scripts
 COPY server /code/server
-
 COPY main.py /code/main.py
 
 ENV N_PIXELS="" \
