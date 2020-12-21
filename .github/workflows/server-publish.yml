@@ -1,0 +1,45 @@
+name: Publish Server Images
+
+on:
+  push:
+    # Publish `master` as Docker `latest` image.
+    branches:
+      - master
+
+env:
+
+
+jobs:
+
+  # Push image to GitHub Packages.
+  # See also https://docs.docker.com/docker-hub/builds/
+  push:
+
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Prepare
+        if: success()
+        id: prepare
+        run: |
+          echo ::set-output name=docker_platforms::linux/arm/v6
+          echo ::set-output name=docker_username::drakeapps
+          echo ::set-output name=version::${GITHUB_REF#refs/*/}
+          echo ::set-output name=hash::${GITHUB_SHA}
+      - name: Set up buildx
+        uses: crazy-max/ghaction-docker-buildx@v3
+      - name: GHCR Login
+        if: success()
+        run: |
+          run: echo "${{ secrets.CR_PAT }}" | docker login https://ghcr.io -u ${{ github.actor }} --password-stdin
+      - name: Build rpi image
+        if: success() && contains(steps.prepare.outputs.version, 'master')
+        run: |
+          docker buildx build \
+            --output type=image,name=ghcr.io/drakeapps/cloud-led-controller/server-rpi,push=true \
+            --platform ${{ steps.prepare.outputs.docker_platforms }} \
+            --tag "ghcr.io/drakeapps/cloud-led-controller/server-rpi:latest" \
+            --file Dockerfile .
