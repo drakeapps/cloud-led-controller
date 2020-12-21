@@ -12,7 +12,7 @@ services:
     ports:
       - 6789:6789
   ssl:
-    image: ghcr.io/drakeapps/cloud-led-controller/ssl-rpi
+    image: ghcr.io/drakeapps/cloud-led-controller/server-ssl
     build:
       context: ssl/
     ports:
