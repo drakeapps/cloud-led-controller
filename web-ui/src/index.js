@@ -1,3 +1,5 @@
+import "@babel/polyfill";
+
 import React, { useState, useEffect, useRef}  from 'react';
 import ReactDOM from 'react-dom';
 
