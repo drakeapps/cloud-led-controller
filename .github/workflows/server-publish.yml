@@ -40,8 +40,36 @@ jobs:
       - name: Build rpi image
         if: success() && contains(steps.prepare.outputs.version, 'master')
         run: |
+          make rpi
           docker buildx build \
             --output type=image,name=ghcr.io/drakeapps/cloud-led-controller/server-rpi,push=true \
-            --platform ${{ steps.prepare.outputs.docker_platforms }} \
+            --platform linux/arm/v6 \
             --tag "ghcr.io/drakeapps/cloud-led-controller/server-rpi:latest" \
+            --file Dockerfile .
+      - name: Build rpi2 image
+        if: success() && contains(steps.prepare.outputs.version, 'master')
+        run: |
+          make rpi2
+          docker buildx build \
+            --output type=image,name=ghcr.io/drakeapps/cloud-led-controller/server-rpi2,push=true \
+            --platform linux/arm/v7 \
+            --tag "ghcr.io/drakeapps/cloud-led-controller/server-rpi2:latest" \
+            --file Dockerfile .
+      - name: Build rpi3 image
+        if: success() && contains(steps.prepare.outputs.version, 'master')
+        run: |
+          make rpi3
+          docker buildx build \
+            --output type=image,name=ghcr.io/drakeapps/cloud-led-controller/server-rpi3,push=true \
+            --platform linux/arm/v7 \
+            --tag "ghcr.io/drakeapps/cloud-led-controller/server-rpi3:latest" \
+            --file Dockerfile .
+      - name: Build rpi4-64 image
+        if: success() && contains(steps.prepare.outputs.version, 'master')
+        run: |
+          make rpi4-64
+          docker buildx build \
+            --output type=image,name=ghcr.io/drakeapps/cloud-led-controller/server-rpi3,push=true \
+            --platform linux/arm64 \
+            --tag "ghcr.io/drakeapps/cloud-led-controller/server-rpi4-64:latest" \
             --file Dockerfile .
