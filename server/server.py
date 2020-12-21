@@ -87,40 +87,17 @@ class Server:
 
     async def start_sound(self):
         print('starting sound')
-        # if not self.sound_loop:
-        #     print('starting sound loop')
-        #     self.sound_loop = asyncio.new_event_loop()
-        #     threading.Thread(target=self.sound_loop.run_forever).start()
-        #     asyncio.run_coroutine_threadsafe(self.start_mic_streaming(), self.sound_loop)
-        # else:
-        #     print('sound loop already exists')
         loop = asyncio.get_event_loop()
         loop.run_in_executor(self.executor, self.start_mic_streaming)
-        # tasks.append(task)
-        # return await asyncio.gather(*tasks)
-        # return
-        # self.start_mic_streaming()
         return
     
     async def stop_sound(self):
         print('stopping sound')
-        # loop = asyncio.get_event_loop()
-        # tasks = []
-        # task = loop.run_in_executor(None, self.stop_mic_streaming)
-        # tasks.append(task)
-        # return await asyncio.gather(*tasks)
-        # if self.sound_task:
-        print('found loop, closing')
         loop = asyncio.get_event_loop()
         loop.run_in_executor(self.executor, self.stop_mic_streaming)
-            # sound_status = self.sound_task.cancel()
-            # print(f"cancel: {sound_status}")
-            # if sound_status:
-            # self.sound_task = None
-            # self.sound_task = None
-        # else:
-            # print('no sound loop')
-
+        # wait a little bit to ensure the mic streaming is stopped
+        # we probably can monitor it, but i don't have enough time to figure it out
+        await asyncio.sleep(0.25)
 
     async def toggle_sound(self, action):
         state = self.state
