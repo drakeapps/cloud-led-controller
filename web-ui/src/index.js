@@ -41,16 +41,20 @@ const App = props => {
 	
 	const history = useHistory();
 
-	// host = ;
-	// port = ;
-	// ssl = ;
-
 	let changeSSL = (value) => {
-		console.log(value);
 		value = value ? true: false;
-		console.log(value);
 		localStorage.setItem('ssl', value);
 		setSSL(value);
+	};
+
+	let changeHost = (value) => {
+		localStorage.setItem('host', value);
+		setHost(value);
+	};
+
+	let changePort = (value) => {
+		localStorage.setItem('port', value);
+		setPort(value);
 	};
 
 	return (
@@ -65,7 +69,7 @@ const App = props => {
 		</AppBar>
 		<Switch>
 		<Route path="/config">
-			<Config host={host} port={port} ssl={ssl} changeSSL={changeSSL}/>
+			<Config host={host} port={port} ssl={ssl} changeSSL={changeSSL} changeHost={changeHost} changePort={changePort} />
 		</Route>
 		<Route path="/">
 			<Home host={host} port={port} ssl={ssl} />
@@ -78,11 +82,11 @@ const App = props => {
 const Config = props => {
 	return (<Box>
 		<Grid container spacing={3} style={{padding: "10px"}}>
-			<Grid item xs={12}><TextField id="host" label="Host" onChange={(event) => {localStorage.setItem('host', event.target.value)}} defaultValue={props.host} /></Grid>
-			<Grid item xs={12}><TextField id="port" label="Port" type="number" onChange={(event) => {localStorage.setItem('port', event.target.value)}} defaultValue={props.port}  /></Grid>
+			<Grid item xs={12}><TextField id="host" label="Host" type="url" onChange={(event) => {props.changeHost(event.target.value)}} defaultValue={props.host} /></Grid>
+			<Grid item xs={12}><TextField id="port" label="Port" type="number" onChange={(event) => {props.changePort(event.target.value)}} defaultValue={props.port}  /></Grid>
 			<Grid item xs={12}>
 				<FormControlLabel
-					control={<Checkbox checked={props.ssl} onChange={(event) => {console.log(event); props.changeSSL(event.target.checked)}} name="ssl" />}
+					control={<Checkbox checked={props.ssl} onChange={(event) => {props.changeSSL(event.target.checked)}} name="ssl" />}
 					label="SSL"
 				/>
 			</Grid>
@@ -161,7 +165,6 @@ const Home = props => {
 	}, []);
 
 	const changeMode = (mode) => {
-		console.log(ws);
 		setPending(true);
 		ws.current.send(JSON.stringify({
 			'action': mode
@@ -181,14 +184,13 @@ const Home = props => {
 	return (<Box>
 		<ProgressBar pending={pending}></ProgressBar>
 		<ConnectionStatus connected={connected} lastmessage={lastmessage}></ConnectionStatus>
-		<ModeSelector status={status} changeMode={changeMode}></ModeSelector>
+		<ModeSelector status={status} changeMode={changeMode} color={color}></ModeSelector>
 		<ColorSelector status={status} color={color} handleOnChangeComplete={changeColor}></ColorSelector>
 	</Box>);
 }
 
 
 const ConnectionStatus = props => {
-	console.log(props);
 	return (<Grid container alignItems='flex-end' justify='flex-end' alignContent='flex-end' style={{padding: '5px'}}>
 		<Grid item xs={12} style={{textAlign: 'right'}} className="status-line" >
 			<Grid container alignItems='flex-end' justify='flex-end' alignContent='flex-end'>
@@ -222,7 +224,7 @@ const ModeSelector = props => {
 			<ButtonGroup size="large" color="primary" aria-label="large outlined primary button group">
 				<Button variant={(props.status === 'off') ? 'contained': ''} onClick={() => props.changeMode('off')}>Off</Button>
 				<Button variant={(props.status === 'sound') ? 'contained': ''} onClick={() => props.changeMode('sound')}>Sound</Button>
-				<Button variant={(props.status === 'on') ? 'contained': ''} onClick={() => props.changeMode('on')}>Color</Button>
+				<Button variant={(props.status === 'on') ? 'contained': ''} onClick={() => props.changeMode('on')} style={{backgroundColor: (props.status === "on") ? rgbToHex(...props.color.rgb) : null}}>Color</Button>
 			</ButtonGroup>
 		</Grid>
 	</Grid>);
@@ -236,7 +238,7 @@ const ColorSelector = props => {
 
 	return (<Grid container justify="center" style={{paddingTop: '10px'}}>
 		<Grid item>
-			<CirclePicker color={rgbToHex(...props.color.rgb)} onChangeComplete={props.handleOnChangeComplete} ></CirclePicker>
+			<CirclePicker color={rgbToHex(...props.color.rgb)} onChangeComplete={props.handleOnChangeComplete}></CirclePicker>
 		</Grid>
 	</Grid>);
 
