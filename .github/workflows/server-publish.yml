@@ -33,6 +33,8 @@ jobs:
         uses: crazy-max/ghaction-docker-buildx@v3
       - name: GHCR Login
         if: success()
+        env:
+          CR_PAT: ${{ secrets.CR_PAT }}
         run: |
           run: echo "${{ secrets.CR_PAT }}" | docker login https://ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build rpi image
