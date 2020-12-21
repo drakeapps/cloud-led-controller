@@ -40,6 +40,7 @@ jobs:
       - name: Build rpi image
         if: success() && contains(steps.prepare.outputs.version, 'master')
         run: |
+          cd ssl
           docker buildx build \
             --output type=image,name=ghcr.io/drakeapps/cloud-led-controller/server-ssl,push=true \
             --platform ${{ steps.prepare.outputs.docker_platforms }} \

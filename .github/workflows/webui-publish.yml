@@ -40,6 +40,7 @@ jobs:
       - name: Build rpi image
         if: success() && contains(steps.prepare.outputs.version, 'master')
         run: |
+          cd web-ui
           docker buildx build \
             --output type=image,name=ghcr.io/drakeapps/cloud-led-controller/webui,push=true \
             --platform ${{ steps.prepare.outputs.docker_platforms }} \
