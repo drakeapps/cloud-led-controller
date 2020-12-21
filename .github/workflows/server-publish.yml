@@ -36,7 +36,7 @@ jobs:
         env:
           CR_PAT: ${{ secrets.CR_PAT }}
         run: |
-          run: echo "${{ secrets.CR_PAT }}" | docker login https://ghcr.io -u ${{ github.actor }} --password-stdin
+          echo "${{ secrets.CR_PAT }}" | docker login https://ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build rpi image
         if: success() && contains(steps.prepare.outputs.version, 'master')
         run: |
