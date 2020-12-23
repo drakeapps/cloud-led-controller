@@ -265,6 +265,7 @@ const ColorSelector = props => {
 				defaultValue={props.brightness}
 				aria-labelledby="discrete-slider"
 				valueLabelDisplay="auto"
+				value={props.brightness}
 				step={5}
 				marks
 				min={0}
