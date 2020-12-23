@@ -24,6 +24,7 @@ import Grid from '@material-ui/core/Grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
+import Slider from '@material-ui/core/Slider';
 
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import RefreshIcon from '@material-ui/icons/Refresh';
@@ -152,6 +153,10 @@ const Home = props => {
 				if (json.normalLight.color) {
 					setColor(json.normalLight.color);
 				}
+
+				if (json.normalLight.brightness) {
+					setBrightness(json.normalLight.brightness);
+				}
 			};
 
 
@@ -172,7 +177,7 @@ const Home = props => {
 			'action': mode
 		}));
 		// setStatus(mode);
-	}
+	};
 
 	const changeColor = (color) => {
 		setPending(true);
@@ -180,14 +185,22 @@ const Home = props => {
 			action: 'color',
 			color: color
 		}));
-	}
+	};
+
+	const changeBrightness = (event, brightness) => {
+		setPending(true);
+		ws.current.send(JSON.stringify({
+			action: 'brightness',
+			brightness: brightness
+		}));
+	};
 
 
 	return (<Box>
 		<ProgressBar pending={pending}></ProgressBar>
 		<ConnectionStatus connected={connected} lastmessage={lastmessage}></ConnectionStatus>
 		<ModeSelector status={status} changeMode={changeMode} color={color}></ModeSelector>
-		<ColorSelector status={status} color={color} handleOnChangeComplete={changeColor}></ColorSelector>
+		<ColorSelector status={status} color={color} handleOnChangeComplete={changeColor} brightness={brightness} handleBrightnessChange={changeBrightness}></ColorSelector>
 	</Box>);
 }
 
@@ -238,11 +251,28 @@ const ColorSelector = props => {
 		return <></>;
 	}
 
-	return (<Grid container justify="center" style={{paddingTop: '10px'}}>
+	return (<><Grid container justify="center" style={{paddingTop: '10px'}}>
 		<Grid item>
 			<CirclePicker color={rgbToHex(...props.color.rgb)} onChangeComplete={props.handleOnChangeComplete}></CirclePicker>
 		</Grid>
-	</Grid>);
+	</Grid>
+	<Grid container justify="center" style={{paddingTop: '10px'}}>
+		<Grid item style={{minWidth: '250px'}}>
+			<Typography id="discrete-slider" gutterBottom>
+				Brightness
+			</Typography>
+			<Slider
+				defaultValue={props.brightness}
+				aria-labelledby="discrete-slider"
+				valueLabelDisplay="auto"
+				step={5}
+				marks
+				min={0}
+				max={100}
+				onChange={props.handleBrightnessChange}
+			/>
+		</Grid>
+	</Grid></>);
 
 }
 
