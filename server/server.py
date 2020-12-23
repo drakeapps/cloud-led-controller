@@ -112,7 +112,7 @@ class Server:
     
 
     def start_color(self):
-        self.cloud_lights.transition(color=self.state['color']['rgb'], length=0.2, interval=0.2)
+        self.cloud_lights.transition(color=self.state['color']['rgb'], length=0.1, interval=0.1)
     
     def stop_color(self):
         self.cloud_lights.off()
@@ -183,7 +183,7 @@ class Server:
     def set_light_brightness(self, brightness):
         self.cloud_lights.set_self_brightness(brightness)
         # write out the LEDs to represent this brightness
-        self.cloud_lights.transition(color=self.state['color']['rgb'], length=0.1, interval=0.1)
+        self.cloud_lights.transition(color=self.state['color']['rgb'], length=0.05, interval=0.05)
 
         
     async def set_brightness(self, brightness):
