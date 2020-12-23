@@ -35,7 +35,7 @@ class Server:
 
         # set the max brightness to the self brightness value
         # we probably want to make this an argurement instead
-        self.max_brightness = self.cloud_lights.self_brightness
+        self.max_brightness = self.cloud_lights.brightness
 
         self.sound_loop = None
 
@@ -182,6 +182,8 @@ class Server:
     
     def set_light_brightness(self, brightness):
         self.cloud_lights.set_self_brightness(brightness)
+        # write out the LEDs to represent this brightness
+        self.cloud_lights.transition(color=self.state['color']['rgb'], length=0.1, interval=0.1)
 
         
     async def set_brightness(self, brightness):
