@@ -1,4 +1,4 @@
-# Cloud (or any WS2812B) LED Websocket Controller
+# Cloud LED (or any WS2812B LED Strip) Websocket Controller
 
 Raspberry Pi Websocket controller for WS2812b LED strip. Used for a light up cloud build, hence the name, but will work anything using that LED strip
 
@@ -6,6 +6,19 @@ Raspberry Pi Websocket controller for WS2812b LED strip. Used for a light up clo
 * [audio-reactive-led-strip](https://github.com/drakeapps/audio-reactive-led-strip) - for sound mode
 
 Been tested on Model B+ and 4B, but has targets for all and _should_ work on any.
+
+## Hardware
+
+### Parts
+
+* Raspberry Pi
+* WS2812B LED Strip
+* Level Shifter
+* Additional 5V Power Supply (if needed)
+
+### Build
+
+Follow the [Adafruit guide](https://learn.adafruit.com/neopixels-on-raspberry-pi/raspberry-pi-wiring) to wiring the NeoPixels with level shifting chip. For my 250 LED setup, I have decently large 5V power supply in addition to the RPi 4 supply, and it has trouble powering all LEDs at higher brightness. 
 
 ## Installation
 
