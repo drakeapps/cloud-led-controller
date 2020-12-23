@@ -194,10 +194,10 @@ class Server:
             state['brightness'] = 0
             self.set_state(state)
         else:
-            if state["status"] == "sound":
+            if self.state["status"] == "sound":
                 await self.stop_sound()
                 await self.turn_on()
-            elif state["status"] == "off":
+            elif self.state["status"] == "off":
                 await self.turn_on()
             
             # convert 75% brightness to a fraction of max brightness
