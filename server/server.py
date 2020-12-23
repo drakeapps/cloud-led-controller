@@ -2,9 +2,9 @@ import asyncio
 import json
 import threading
 import websockets
+import colorsys
 
 from concurrent.futures import ThreadPoolExecutor
-
 
 
 from AudioReactiveLEDStrip import visualization
@@ -13,12 +13,6 @@ from AudioReactiveLEDStrip import microphone
 
 from CloudLights import lights
 
-
-# TODO remove
-# i think we can drop this and just rely on the cloudlights module for giving us color
-# but for testing purposes, we're going to use it to convert to hsv
-import colorsys
-
 class Server:
     def __init__(self, host="localhost", port=6789, cloud_lights=None, audio_lights=None, mic_kv=None):
         # this will maintain a status of off/on/sound
@@ -26,9 +20,9 @@ class Server:
         # homekit
         self._state = {
             'status': 'off',
-            'brightness': 0,
+            'brightness': 100,
             'color': {
-                'rgb': [10,10,10],
+                'rgb': [0,0, 0],
                 'hsv': [0,0,0]
             }
         }
@@ -38,6 +32,10 @@ class Server:
         self.mic_kv = mic_kv
 
         self.mic = microphone.Microphone()
+
+        # set the max brightness to the self brightness value
+        # we probably want to make this an argurement instead
+        self.max_brightness = self.cloud_lights.brightness
 
         self.sound_loop = None
 
@@ -65,9 +63,7 @@ class Server:
         self._state = value
         await self.notify_status()
     
-    # TODO
     def status_json(self):
-
         return json.dumps({
             'normalLight': {
                 'power': (self.state['status'] == "on"),
@@ -116,7 +112,7 @@ class Server:
     
 
     def start_color(self):
-        self.cloud_lights.transition(color=self.state['color']['rgb'], length=0.2, interval=0.2)
+        self.cloud_lights.transition(color=self.state['color']['rgb'], length=0.05, interval=0.05)
     
     def stop_color(self):
         self.cloud_lights.off()
@@ -183,8 +179,42 @@ class Server:
         }
 
         await self.set_state(state)
-        
+    
+    def set_light_brightness(self, brightness):
+        self.cloud_lights.set_self_brightness(brightness)
+        # write out the LEDs to represent this brightness
+        self.cloud_lights.transition(color=self.state['color']['rgb'], length=0.05, interval=0.05)
 
+        
+    async def set_brightness(self, brightness):
+        # turn off lights if brightness is 0
+        if brightness == 0:
+            await self.turn_off()
+            state = self.state
+            state['brightness'] = 0
+            self.set_state(state)
+        else:
+            if self.state["status"] == "sound":
+                await self.stop_sound()
+                await self.turn_on()
+            elif self.state["status"] == "off":
+                await self.turn_on()
+            
+            # convert 75% brightness to a fraction of max brightness
+            self_brightness = brightness / 100 * self.max_brightness
+
+            loop = asyncio.get_event_loop()
+            tasks = []
+            task = loop.run_in_executor(None, self.set_light_brightness, self_brightness)
+            tasks.append(task)
+            await asyncio.gather(*tasks)
+            state = self.state
+            state['brightness'] = brightness
+            await self.set_state(state)
+            
+            
+
+            
 
     async def notify_status(self):
         if self.CONNS:
@@ -205,15 +235,15 @@ class Server:
             async for message in websocket:
                 data = json.loads(message)
                 if data["action"] == "sound":
-                    # TODO actually do the thing
                     await self.toggle_sound("on")
                 elif data["action"] == "on":
                     await self.turn_on()
                 elif data["action"] == "off":
                     await self.turn_off()
                 elif data["action"] == "color" and "color" in data:
-                    print(data["color"])
                     await self.set_color(data["color"])
+                elif data["action"] == "brightness" and "brightness" in data:
+                    await self.set_brightness(data["brightness"])
                 else:
                     print(f"unsupported event: {data}")
         finally:
