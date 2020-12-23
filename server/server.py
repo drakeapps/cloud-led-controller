@@ -210,7 +210,7 @@ class Server:
             await asyncio.gather(*tasks)
             state = self.state
             state['brightness'] = brightness
-            self.set_state(state)
+            await self.set_state(state)
             
             
 
