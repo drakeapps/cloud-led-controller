@@ -3,6 +3,7 @@ version: '3'
 services:
   server:
     image: ghcr.io/drakeapps/cloud-led-controller/server-rpi
+    restart: unless-stopped
     build:
       context: .
     devices:
@@ -13,6 +14,7 @@ services:
       - 6789:6789
   ssl:
     image: ghcr.io/drakeapps/cloud-led-controller/server-ssl
+    restart: unless-stopped
     build:
       context: ssl/
     ports:
@@ -21,6 +23,7 @@ services:
       - /var/opt/ssl/:/etc/nginx/ssl/
   webui:
     image: ghcr.io/drakeapps/cloud-led-controller/webui
+    restart: unless-stopped
     build:
       context: web-ui/
     ports:
