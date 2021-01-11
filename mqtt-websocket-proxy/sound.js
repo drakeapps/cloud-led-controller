@@ -5,9 +5,7 @@
 const mqqtHost = 'o.xrho.com';
 const mqttLightName = 'soundLight';
 
-const wsProtocol = 'wss';
-const wsHost = 'cloud.xrho.com';
-const wsPort = '443';
+const wsURL = 'wss://cloud.xrho.com:443';
 // key the light represents. {"$key": { power: true|false } }
 const wsKey = 'soundLight';
 const wsOnAction = 'sound';
@@ -17,11 +15,12 @@ const wsOnAction = 'sound';
 const mqtt = require('mqtt');
 const client = mqtt.connect(`mqtt://${mqqtHost}`);
 const WebSocket = require('ws');
-const ws = new WebSocket(`${wsProtocol}://${wsHost}:${wsPort}`);
+const ws = new WebSocket(`${wsURL}`);
 
+console.log('sound led proxy starting');
 
 client.on('connect', () => {
-	// Inform controllers that garage is connected
+	console.log('mqtt connected');
 	client.publish(`${mqttLightName}/connected`, 'true');
 	client.subscribe(`${mqttLightName}/setOn`);
 });

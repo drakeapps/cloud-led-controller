@@ -7,4 +7,4 @@ RUN npm i
 
 COPY sound.js color.js /build/
 
-CMD [ node, sound.js ]
+CMD [ "node", "sound.js" ]
