@@ -28,3 +28,14 @@ services:
       context: web-ui/
     ports:
       - 80:80
+  mqtt-sound:
+    image: ghcr.io/drakeapps/cloud-led-controller/mqqt
+    restart: unless-stopped
+    build:
+      context: mqtt-websocket-proxy/
+  mqtt-color:
+    image: ghcr.io/drakeapps/cloud-led-controller/mqtt
+    restart: unless-stopped
+    build:
+      context: mqtt-websocket-proxy/
+    command: "node color.js"
