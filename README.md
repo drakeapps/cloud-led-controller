@@ -69,7 +69,7 @@ Place your `fullchain.pem` and `privkey.pem` in `/var/opt/ssl` or whatever mount
 
 Start the docker container:
 
-```
+```bash
 docker-compose up -d ssl
 ```
 
@@ -85,13 +85,13 @@ Visit `ip-address/config` first to setup the websocket server location, port, an
 
 **Docker**
 
-```
+```bash
 docker-compose up -d webui
 ```
 
 **Building**
 
-```
+```bash
 cd web-ui
 npm i
 npm run build
@@ -101,7 +101,7 @@ This builds the html and js files. You'll then need to serve them via your prefe
 
 A simple, yet insecure, way to serve the files is with [http-server](https://github.com/http-party/http-server)
 
-```
+```bash
 npx http-server dist --proxy http://localhost:8080\?
 ```
 
@@ -126,13 +126,37 @@ To MQTT:
 * `rgbLight/getRGB` - R,G,B
 
 
-You will need an MQTT broker. This can be run on the pi or a separate server. I'm running (eclipse-mosquitto)[https://hub.docker.com/_/eclipse-mosquitto] on a separate server.
+You will need an MQTT broker. This can be run on the pi or a separate server. I'm running [eclipse-mosquitto](https://hub.docker.com/_/eclipse-mosquitto) on a separate server.
+
+### Install/Running
+
+**Docker**
+
+There are 2 docker-compose targets for both MQTT proxies. They are the same image with different `command` parameters. Edit the `.env` file to specify your MQTT broker hostname and your WebSocket URL.
+
+```bash
+docker-compose up -d mqtt-sound
+docker-compose up -d mqtt-color
+```
+
+**Not Docker**
+
+```bash
+cd mqtt-websocket-proxy
+npm i
+# for the sound proxy
+node sound.js --mqttHost mqtt-broker.local --wsURL wss://cloud-pi.local:443
+# for the color proxy
+node color.js --mqttHost mqtt-broker.local --wsURL wss://cloud-pi.local:443
+```
+
+Additional command line arguments are available and shown in [sound.js](https://github.com/drakeapps/cloud-led-controller/blob/master/mqtt-websocket-proxy/sound.js) and [color.js](https://github.com/drakeapps/cloud-led-controller/blob/master/mqtt-websocket-proxy/color.js)
 
 ### Homebridge
 
 Install [homebridge-mqttthing](https://github.com/arachnetech/homebridge-mqttthing)
 
-Add these accessories in `config.json`, editing your `mqtt` `url` to point to your broker. Also change the names as desired. 
+Add these accessories in `config.json`, editing `url` to point to your MQTT broker. Change the names of the light as desired. 
 
 ```
 {
@@ -160,3 +184,4 @@ Add these accessories in `config.json`, editing your `mqtt` `url` to point to yo
 ```
 
 This will add two lights, `SoundCloud` for the sound reactive mode and `Cloud` for standard RGB mode. Like the websocket output, this will turn off on if the other is turned on.
+

@@ -1,20 +1,48 @@
 // On/Off MQTT<->Websocket proxy
 
+const yargs = require('yargs');
+const mqtt = require('mqtt');
+const WebSocket = require('ws');
+
+const argv = yargs
+	.option('mqttHost', {
+		description: 'Hostname of MQTT broker',
+		alias: 'mqtt',
+		type: 'string'
+	})
+	.option('wsURL', {
+		description: 'URL for WebSocket server. Full URL include wss://',
+		alias: 'ws',
+		type: 'string'
+	})
+	.option('mqttLightName', {
+		description: 'Name of the light that will precede / commands',
+		type: 'string'
+	})
+	.option('wsKey', {
+		description: 'In websocket message, the key the light represents. Ex: {"$key": { power: true|false } }',
+		type: 'string'
+	})
+	.option('wsOnAction', {
+		description: 'In websocket message, the key that will be sent as the action. ex: {"action": "$wsOnAction"}',
+		type: 'string'
+	})
+	.help()
+	.alias('help', 'h')
+	.argv;
+
 
 // CONFIG
-const mqqtHost = 'o.xrho.com';
-const mqttLightName = 'soundLight';
+const mqqtHost = (argv.mqttHost) ? argv.mqttHost : 'o.xrho.com';
+const mqttLightName = (argv.mqttLightName) ? argv.mqttLightName : 'soundLight';
 
-const wsURL = 'wss://cloud.xrho.com:443';
+const wsURL = (argv.wsURL) ? argv.wsURL : 'wss://cloud.xrho.com:443';
 // key the light represents. {"$key": { power: true|false } }
-const wsKey = 'soundLight';
-const wsOnAction = 'sound';
+const wsKey = (argv.wsKey) ? argv.wsKey : 'soundLight';
+const wsOnAction = (argv.wsOnAction) ? argv.wsOnAction : 'sound';
 
 
-
-const mqtt = require('mqtt');
 const client = mqtt.connect(`mqtt://${mqqtHost}`);
-const WebSocket = require('ws');
 const ws = new WebSocket(`${wsURL}`);
 
 console.log('sound led proxy starting');

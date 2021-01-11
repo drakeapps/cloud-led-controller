@@ -33,9 +33,10 @@ services:
     restart: unless-stopped
     build:
       context: mqtt-websocket-proxy/
+    command: "node sound.js --mqttHost $${MQTTHOST} --wsURL $${WSURL}"
   mqtt-color:
     image: ghcr.io/drakeapps/cloud-led-controller/mqtt
     restart: unless-stopped
     build:
       context: mqtt-websocket-proxy/
-    command: "node color.js"
+    command: "node color.js --mqttHost $${MQTTHOST} --wsURL $${WSURL}"

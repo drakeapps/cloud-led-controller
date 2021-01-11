@@ -1,25 +1,59 @@
 // Color MQTT<->Websocket proxy
 
+const yargs = require('yargs');
+const mqtt = require('mqtt');
+const WebSocket = require('ws');
+
+
+const argv = yargs
+	.option('mqttHost', {
+		description: 'Hostname of MQTT broker',
+		alias: 'mqtt',
+		type: 'string'
+	})
+	.option('wsURL', {
+		description: 'URL for WebSocket server. Full URL include wss://',
+		alias: 'ws',
+		type: 'string'
+	})
+	.option('mqttLightName', {
+		description: 'Name of the light that will precede / commands',
+		type: 'string'
+	})
+	.option('wsKey', {
+		description: 'In websocket message, the key the light represents. Ex: {"$key": { power: true|false } }',
+		type: 'string'
+	})
+	.option('wsOnAction', {
+		description: 'In websocket message, the key that will be sent as the action. ex: {"action": "$wsOnAction"}',
+		type: 'string'
+	})
+	.option('wsColorAction', {
+		description: 'In websocket message, the key that will be sent as the action. ex: {"action": "$wsColorAction"}',
+		type: 'string'
+	})
+	.help()
+	.alias('help', 'h')
+	.argv;
+
+
 
 // CONFIG
-// TODO: pass in as command line arguments
-const mqqtHost = 'o.xrho.com';
-const mqttLightName = 'rgbLight';
+const mqqtHost = (argv.mqttHost) ? argv.mqttHost : 'o.xrho.com';
+const mqttLightName = (argv.mqttLightName) ? argv.mqttLightName : 'rgbLight';
 
-const wsURL = 'wss://cloud.xrho.com:443';
+const wsURL = (argv.wsURL) ? argv.wsURL : 'wss://cloud.xrho.com:443';
 // key the light represents. {"$key": { power: true|false } }
-const wsKey = 'normalLight';
+const wsKey = (argv.wsKey) ? argv.wsKey : 'normalLight';
 // {"action": $wsXXXXAction}
 // this can and probably should be abstracted more
 // the rest of the json payload is still hardcoded and specific
-const wsOnAction = 'on';
-const wsColorAction = 'color';
+const wsOnAction = (argv.wsOnAction) ? argv.wsOnAction : 'on';
+const wsColorAction = (argv.wsColorAction) ? argv.wsColorAction : 'color';
 
 console.log('color led proxy starting');
 
-const mqtt = require('mqtt');
 const client = mqtt.connect(`mqtt://${mqqtHost}`);
-const WebSocket = require('ws');
 const ws = new WebSocket(`${wsURL}`);
 
 
