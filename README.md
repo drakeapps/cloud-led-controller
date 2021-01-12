@@ -1,5 +1,7 @@
 # Cloud LED (or any WS2812B LED Strip) Websocket Controller
 
+![](doc/files/cloud.gif)
+
 Raspberry Pi Websocket controller for WS2812b LED strip. Used for a light up cloud build, hence the name, but will work anything using that LED strip
 
 * [cloud-leds](https://github.com/drakeapps/cloud-leds) - for solid color and off modes
