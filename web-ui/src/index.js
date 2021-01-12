@@ -31,6 +31,17 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 
 import './index.scss';
 
+// pull in all icons
+import icon0 from './images/apple-touch-icon.png';
+import icon57 from './images/apple-touch-icon-57x57.png';
+import icon72 from './images/apple-touch-icon-72x72.png';
+import icon76 from './images/apple-touch-icon-76x76.png';
+import icon114 from './images/apple-touch-icon-114x114.png';
+import icon120 from './images/apple-touch-icon-120x120.png';
+import icon144 from './images/apple-touch-icon-144x144.png';
+import icon152 from './images/apple-touch-icon-152x152.png';
+import icon180 from './images/apple-touch-icon-180x180.png';
+
 const rgbToHex = (r, g, b) => '#' + [r, g, b].map(x => {
 	const hex = x.toString(16)
 	return hex.length === 1 ? '0' + hex : hex
