@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "mqtt": "^4.2.6",
-    "ws": "^7.4.2",
+    "ws": "^7.4.6",
     "yargs": "^16.2.0"
   }
 }
